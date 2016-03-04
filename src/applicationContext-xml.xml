@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:component-scan base-package="com.spring2.aop.imp"></context:component-scan>
+	<!-- 配置LogCatXml的Bean -->
+	<bean id="logCatXml" class="com.spring2.aop.imp.LogCatXml"></bean>
+	<!-- 声明切面 -->
+	<aop:config>
+		<aop:aspect id="logAspect" ref="logCatXml">
+			<!-- 配置切点，在 <aop:config>下配置对所有的切面生效 -->
+			<aop:pointcut
+				expression="execution(* com.spring2.aop.imp.ArithmeticCalculatorIn.*(int,int))"
+				id="testOperation" />
+			<aop:before method="beforeMethod" pointcut-ref="testOperation" />
+			<aop:after-returning method="afterResult"
+				pointcut-ref="testOperation" returning="result" />
+			<aop:after method="after" pointcut-ref="testOperation" />
+			<aop:after-throwing method="errorResult"
+				pointcut-ref="testOperation" throwing="e" />
+		</aop:aspect>
+	</aop:config>
+</beans>
